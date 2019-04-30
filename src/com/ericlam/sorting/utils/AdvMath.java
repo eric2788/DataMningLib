@@ -1,0 +1,76 @@
+package com.ericlam.sorting.utils;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.util.*;
+
+public class AdvMath {
+    public static int getNumLenght(long num){
+        num = num>0?num:-num;
+        if (num==0) {
+            return 1;
+        }
+        return (int) Math.log10(num)+1;
+
+    }
+
+    public static int getNumLenght(double num){
+        return getNumLenght((long)num);
+    }
+
+    public static double round(int f,double num){
+        BigDecimal decimal = new BigDecimal(num);
+        return decimal.round(new MathContext(f, RoundingMode.HALF_EVEN)).doubleValue();
+    }
+
+    public static double roundCil(int f,double num){
+        BigDecimal decimal = new BigDecimal(num);
+        return decimal.round(new MathContext(f, RoundingMode.CEILING)).doubleValue();
+    }
+
+    public static double roundFlr(int f,double num){
+        BigDecimal decimal = new BigDecimal(num);
+        return decimal.round(new MathContext(f, RoundingMode.FLOOR)).doubleValue();
+    }
+
+    public static boolean contain(double[] row, double[] contain){
+        var a = toDoubleList(row);
+        var b = toDoubleList(contain);
+        return a.containsAll(b);
+    }
+
+    public static long count(double[] row, double value){
+        long count = 0;
+        for (double v : row) {
+            if (v == value) ++count;
+        }
+        return count;
+    }
+
+    public static long count(double[][] tables, double[] set){
+        long count = 0;
+        for (double[] row : tables) {
+            if (contain(row,set)) ++count;
+        }
+        return count;
+    }
+
+    public static List<Double> toDoubleList(double[] arr){
+        List<Double> d = new ArrayList<>();
+        for (double v : arr) {
+            d.add(v);
+        }
+        return d;
+    }
+
+    public static double[] toHashDoubleArray(Object[] arr){
+        double[] result = new double[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            result[i] = arr[i].hashCode();
+        }
+        return result;
+    }
+
+
+}
