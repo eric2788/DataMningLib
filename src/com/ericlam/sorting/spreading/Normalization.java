@@ -2,10 +2,6 @@ package com.ericlam.sorting.spreading;
 
 import com.ericlam.sorting.utils.AdvMath;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-
 public class Normalization {
     private double[] ints;
     private double min;

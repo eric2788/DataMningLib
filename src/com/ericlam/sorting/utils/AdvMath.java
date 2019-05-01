@@ -3,9 +3,14 @@ package com.ericlam.sorting.utils;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdvMath {
+
+    private AdvMath() {
+    }
+
     public static int getNumLenght(long num){
         num = num>0?num:-num;
         if (num==0) {
@@ -70,6 +75,24 @@ public class AdvMath {
             result[i] = arr[i].hashCode();
         }
         return result;
+    }
+
+    public static double gini(double total, double a, double b) {
+        double index = 1 - Math.pow(a / total, 2) - Math.pow(b / total, 2);
+        return round(3, index);
+    }
+
+    public static double entropy(double total, double a, double b) {
+        double result = -(a / total * log2(a / total)) - (b / total * log2(b / total));
+        return Double.isNaN(result) ? 0 : round(4, result);
+    }
+
+    public static double computeErr(double total, double a, double b) {
+        return round(3, 1 - Math.max(a / total, b / total));
+    }
+
+    public static double log2(double n) {
+        return Math.log(n) / Math.log(2);
     }
 
 
