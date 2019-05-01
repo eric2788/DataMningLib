@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
  */
 public class Main {
     public static void main(String[] args) {
-        KMeanTesting();
+        kMeanTesting();
     }
 
-    private static void KMeanTesting() { // K means with manhattan distance testing
+    private static void kMeanTesting() { // K means with manhattan distance testing
         double[][] a = {
                 {3, 1},
                 {3, 3},
