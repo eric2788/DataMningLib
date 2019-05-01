@@ -76,9 +76,9 @@ public class Main {
         }
         k2newX = sumX / k2Set.size();
         k2newY = sumY / k2Set.size();
-        k1 = new double[]{k1newX, k1newY};
-        k2 = new double[]{k2newX, k2newY};
         if (!p1.equals(k1Set) && !p2.equals(k2Set)) {
+            k1 = new double[]{k1newX, k1newY};
+            k2 = new double[]{k2newX, k2newY};
             kMeans(a, k1, k2, k1Set, k2Set);
         } else {
             System.out.println("Final K1 :" + Arrays.toString(k1));

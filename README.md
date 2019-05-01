@@ -23,7 +23,7 @@ for Data Mining course Study and Implementation use
 
 #### Main
 ![Main](https://i.gyazo.com/320bbc49e977d36e8c939970bc346caa.png)
-![Main2](https://i.gyazo.com/0850ff8b425cdd52e5a10ef36a0413c3.png)
+![Main2](https://i.gyazo.com/7d67f64430b21e5e72441b68f3eb8ec7.png)
 
 #### Result
 ![Result](https://media.discordapp.net/attachments/195774113141227520/573219983501426688/dfdcb9e42e5ae2c06182172dfef160f1.png)
