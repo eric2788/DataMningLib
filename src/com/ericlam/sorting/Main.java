@@ -2,6 +2,8 @@ package com.ericlam.sorting;
 
 import com.ericlam.sorting.sortfunc.Histogram;
 import com.ericlam.sorting.sortfunc.QuantileSort;
+import com.ericlam.sorting.spreading.BinaryClassify;
+import com.ericlam.sorting.spreading.Normalization;
 import com.ericlam.sorting.spreading.mining.Association;
 import com.ericlam.sorting.utils.AdvMath;
 import com.ericlam.sorting.utils.Distance;
@@ -10,7 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 /**
  * @author r Eric Lam
@@ -18,7 +19,38 @@ import java.util.stream.Collectors;
  */
 public class Main {
     public static void main(String[] args) {
-        kMeanTesting();
+        classingTest();
+    }
+
+    private static void rankingTest() {
+        double[] scores = {174, 109, 80, 67, 50, 44, 31, 29, 24, 18, 18, 15, 13, 12, 12, 9, 8, 7, 7, 5, 5, 5, 5, 5, 5, 5, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2};
+        Normalization normal = new Normalization(scores);
+        String[] ranks = {"Silver I", "Silver II", "Silver III", "Silver IV", "Silver V", "Nova I", "Nova II",
+                "Nova III", "Nova IV", "Nova V", "Diamond I", "Diamond II", "Diamond III", "Diamond IV", "Diamond V", "Elite I", "Elite II", "Global Elite"};
+        System.out.println("Score: " + Arrays.toString(scores));
+        for (double v : normal.zScoreNormalize()) {
+            System.out.println("score: " + v + " ; rank: " + getRank(v, ranks));
+        }
+        System.out.println("===============================");
+        for (double v : normal.minMaxNormalize(0, ranks.length - 1)) {
+            System.out.println("score: " + v + " ; rank: " + getRank2(v, ranks));
+        }
+    }
+
+    private static String getRank2(double score, String[] ranks) {
+        int index = (int) Math.round(score);
+        return ranks[index];
+    }
+
+    private static String getRank(double standardScore, String[] ranks) {
+        int minScore = (int) -Math.floor((int) (ranks.length / 2));
+        int scoreIndex = ((int) standardScore) - minScore;
+        if (scoreIndex < 0) {
+            return ranks[0];
+        } else if (scoreIndex > ranks.length) {
+            return ranks[ranks.length - 1];
+        }
+        return ranks[scoreIndex];
     }
 
     private static void kMeanTesting() { // K means with manhattan distance testing
@@ -99,53 +131,8 @@ public class Main {
                 List.of('T', 'T', 'N'),
                 List.of('F', 'F', 'N')
         };
-        List<List> p = Arrays.stream(list).filter(l -> l.contains('P')).collect(Collectors.toList());
-        List<List> n = Arrays.stream(list).filter(l -> l.contains('N')).collect(Collectors.toList());
-        System.out.println(p);
-        System.out.println(n);
-        long pXT = p.stream().filter(l -> (char) l.get(0) == 'T').count();
-        long pYT = p.stream().filter(l -> (char) l.get(1) == 'T').count();
-        long pXF = p.stream().filter(l -> (char) l.get(0) == 'F').count();
-        long pYF = p.stream().filter(l -> (char) l.get(1) == 'F').count();
-        long nXT = n.stream().filter(l -> (char) l.get(0) == 'T').count();
-        long nYT = n.stream().filter(l -> (char) l.get(1) == 'T').count();
-        long nXF = n.stream().filter(l -> (char) l.get(0) == 'F').count();
-        long nYF = n.stream().filter(l -> (char) l.get(1) == 'F').count();
-        int pSize = p.size();
-        int nSize = n.size();
-        int total = list.length;
-        double overall = AdvMath.entropy(total, pSize, nSize);
-        // for X
-        double EXT = AdvMath.entropy(pXT + nXT, pXT, nXT);
-        double EXF = AdvMath.entropy(pXF + nXF, pXF, nXF);
-        // for Y
-        double EYT = AdvMath.entropy(pYT + nYT, pYT, nYT);
-        double EYF = AdvMath.entropy(pYF + nYF, pYF, nYF);
-        System.out.println("Overall entropy: " + overall);
-        System.out.println("Ex=T: " + EXT);
-        System.out.println("Ex=F: " + EXF);
-        //System.out.println(overall+" - "+(pXT+nXT)+" / "+total+" x "+EXT+" - "+(pXF+nXF)+" / "+total+" x "+EXF);
-        double sumEX = overall - (((double) (pXT + nXT) / total) * EXT) - (((double) (pXF + nXF) / total) * EXF);
-        System.out.println("Sum of X: " + AdvMath.round(4, sumEX));
-
-        System.out.println("Ey=T: " + EYT);
-        System.out.println("Ex=T: " + EYF);
-        double sumEY = overall - (((double) (pYT + nYT) / total) * EYT) - (((double) (pYF + nYF) / total) * EYF);
-        System.out.println("Sum of Y: " + AdvMath.round(4, sumEY));
-        // for X
-        double GXT = AdvMath.gini(pXT + nXT, pXT, nXT);
-        double GXF = AdvMath.gini(pXF + nXF, pXF, nXF);
-        // for Y
-        double GYT = AdvMath.gini(pYT + nYT, pYT, nYT);
-        double GYF = AdvMath.gini(pYF + nYF, pYF, nYF);
-        System.out.println("Gx=T: " + GXT);
-        System.out.println("Gx=F: " + GXF);
-        double sumGX = (((double) (pXT + nXT) / total) * GXT) + (((double) (pXF + nXF) / total) * GXF);
-        System.out.println("Sum of X: " + AdvMath.round(3, sumGX));
-        System.out.println("Gy=T: " + GYT);
-        System.out.println("Gy=F: " + GYF);
-        double sumGY = (((double) (pYT + nYT) / total) * GYT) + (((double) (pYF + nYF) / total) * GYF);
-        System.out.println("Sum of Y: " + AdvMath.round(3, sumGY));
+        BinaryClassify classify = new BinaryClassify(list, 2, 0, 1);
+        classify.printResult();
     }
 
     private static void testAssRules() { // Association rules testing
